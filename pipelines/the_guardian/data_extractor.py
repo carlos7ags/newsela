@@ -35,6 +35,8 @@ def get_content(section: str) -> List[Dict]:
         "api-key": os.getenv("API_KEY"),
         "from-date": datetime.datetime.today().strftime("%Y-%m-%d"),
         "to-date": datetime.datetime.today().strftime("%Y-%m-%d"),
+        "show-fields": "headline,body,byline",
+        "show-tags": "keywords",
     }
     response = requests.get(section, params=params)
     response.raise_for_status()
