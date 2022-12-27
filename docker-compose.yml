@@ -1,0 +1,13 @@
+version: "3.9"
+
+
+services:
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: newsela
+      POSTGRES_PASSWORD: newsela-password
+      POSTGRES_DB: newsela_db
+    volumes:
+      - ./volumes/postgres:/var/lib/postgresql/data
