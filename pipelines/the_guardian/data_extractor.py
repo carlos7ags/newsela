@@ -26,12 +26,13 @@ def get_sections() -> List[str]:
 
 
 @task
-def get_content(section: str) -> List[Dict]:
+def get_content(section: str, date: str) -> List[Dict]:
     """
     Get the list of articles for a given section for the current day.
 
     Args:
         section (str): The section id.
+        date (str): The date to extract articles (YYYY-MM-DD).
     Returns:
         List[Dict]: a list of articles.
     """
@@ -39,8 +40,8 @@ def get_content(section: str) -> List[Dict]:
 
     params = {
         "api-key": os.getenv("API_KEY"),
-        "from-date": datetime.datetime.today().strftime("%Y-%m-%d"),
-        "to-date": datetime.datetime.today().strftime("%Y-%m-%d"),
+        "from-date": date,
+        "to-date": date,
         "show-fields": "headline,body,byline",
         "show-tags": "keywords",
     }
@@ -52,7 +53,7 @@ def get_content(section: str) -> List[Dict]:
 
 
 @flow
-def extract_data_flow() -> List[Dict]:
+def extract_data_flow(date: str) -> List[Dict]:
     """
     A prefect flow to get the list of articles for a given day
     from all active sections.
@@ -63,7 +64,7 @@ def extract_data_flow() -> List[Dict]:
     results = []
     sections = get_sections()
     for section in sections:
-        results += get_content(section)
+        results += get_content(section, date)
     return results
 
 
