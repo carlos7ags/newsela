@@ -15,7 +15,7 @@ def load_data_to_db(data: List[Article]) -> None:
         data (List[Article]): A list of Articles.
     """
     db_manager = DatabaseManager[Article](Article)
-    db_manager.upsert_items(data)
+    db_manager.upsert_items(data, key="handle")
 
 
 @flow
