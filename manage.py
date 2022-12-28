@@ -1,8 +1,11 @@
 import argparse
 import importlib
 import os
+from dotenv import load_dotenv
 
 if __name__ == "__main__":
+    load_dotenv()
+
     parser = argparse.ArgumentParser()
 
     parser.add_argument(
