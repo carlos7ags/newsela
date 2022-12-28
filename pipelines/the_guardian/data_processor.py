@@ -1,5 +1,5 @@
 import os
-from typing import Dict, List, Any
+from typing import Any, Dict, List
 
 from prefect import flow, task
 

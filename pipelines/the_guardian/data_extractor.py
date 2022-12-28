@@ -1,9 +1,8 @@
-import datetime
 import os
 from typing import Dict, List
 
 import requests
-from prefect import flow, task, get_run_logger
+from prefect import flow, get_run_logger, task
 
 from pipelines.the_guardian.constants import SECTIONS_API_URL
 
@@ -18,7 +17,10 @@ def get_sections() -> List[str]:
     """
     logger = get_run_logger()
 
-    response = requests.get(SECTIONS_API_URL, params={"api-key": os.getenv("API_KEY")})
+    response = requests.get(
+        SECTIONS_API_URL,
+        params={"api-key": os.getenv("API_KEY")},
+    )
     response.raise_for_status()
     results = response.json()["response"]["results"]
     logger.info(f"Fetched {len(results)} active sections")

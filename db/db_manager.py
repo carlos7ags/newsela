@@ -2,11 +2,9 @@ import os
 from dataclasses import asdict
 from typing import Any, Dict, Generic, List, Optional, TypeVar
 
-from prefect import get_run_logger
 from sqlalchemy import create_engine, inspect
 from sqlalchemy.orm import sessionmaker
 
-# logger = get_run_logger()
 
 T = TypeVar("T")
 
@@ -34,16 +32,15 @@ class DatabaseManager(Generic[T]):
         self.database = database if database else os.getenv("POSTGRES_DBNAME")
 
         self.engine = create_engine(
-            f"postgresql+psycopg2://{self.username}:{self.password}@{self.host}/{self.database}",
+            f"postgresql+psycopg2://{self.username}:"
+            f"{self.password}@{self.host}/{self.database}",
             echo=False,
         )
         self.Session = sessionmaker(bind=self.engine)
         self._create_table()
 
     def _create_table(self) -> None:
-        """
-        Creates a table for the data model in the database if it does not exist.
-        """
+        """Creates a table for the data model in the database if not exist."""
         table_name = self.data_model.__table__.name
         if not inspect(self.engine).has_table(table_name):
             self.data_model.__table__.create(bind=self.engine, checkfirst=True)
@@ -61,7 +58,8 @@ class DatabaseManager(Generic[T]):
         with self.Session.begin() as session:
             session.bulk_save_objects(data, update_changed_only=False)
             print(
-                f"{len(data)} elements successfully created in {self.data_model.__table__.name}"
+                f"{len(data)} elements successfully created "
+                f"in {self.data_model.__table__.name}"
             )
 
     def upsert_items(self, items: List[T], key: str = "id") -> None:
@@ -83,15 +81,16 @@ class DatabaseManager(Generic[T]):
         if new_items:
             self.bulk_insert_items(new_items)
         print(
-            f"{len(items)} elements successfully updated/created in {self.data_model.__table__.name}"
+            f"{len(items)} elements successfully updated/created "
+            f"in {self.data_model.__table__.name}"
         )
 
     def get_item_by(self, filter_by: Dict[str, Any]) -> Optional[T]:
         """
-        Retrieve an item from the database based on filter parameters (returns first match).
+        Retrieve an item from the database by filter parameters.
 
         Args:
-            filter_by (Dict[str, Any]): A dictionary containing the parameters and values to filter by.
+            filter_by (Dict[str, Any]): The parameters and values to filter by.
         Returns:
             Optional[T]: The matching data object if exists.
         """
@@ -105,7 +104,7 @@ class DatabaseManager(Generic[T]):
         Verify if an object exists in the database based on filter parameters.
 
         Args:
-            filter_by (Dict[str, Any]): A dictionary containing the parameters and values to filter by.
+            filter_by (Dict[str, Any]): The parameters and values to filter by.
         Returns:
             bool: A boolean representing if the object exists.
         """
@@ -114,11 +113,12 @@ class DatabaseManager(Generic[T]):
 
     def update_item_by(self, item: T, filter_by: Dict[str, Any]) -> None:
         """
-        Update the fields values of an existing item in the database (updated the first match for non-unique fields).
+        Update the fields values of an existing item in the database
+        (updated the first match for non-unique fields).
 
         Args:
             item (T): The updated item.
-            filter_by (Dict[str, Any]): A dictionary containing the parameters and values to filter by.
+            filter_by (Dict[str, Any]): The parameters and values to filter by.
         """
         with self.Session.begin() as session:
             session.query(self.data_model).filter_by(**filter_by).update(

@@ -1,8 +1,6 @@
-from dataclasses import field
-from pydantic.dataclasses import dataclass
-
 from datetime import datetime
 
+from pydantic.dataclasses import dataclass
 from sqlalchemy import Column, DateTime, Integer, String, Table
 from sqlalchemy.orm import registry
 
