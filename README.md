@@ -23,6 +23,9 @@ As a result of the execution of the pipeline, the processed recrods are stored i
 docker-compose up -d
 ```
 
+### Sample database view
+![](../../../../var/folders/q0/hgw_k3g5591bbmby40cmbfjw0000gn/T/TemporaryItems/NSIRD_screencaptureui_EWoUK6/Screenshot 2022-12-28 at 12.38.17 AM.png)
+
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
