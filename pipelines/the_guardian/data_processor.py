@@ -1,12 +1,20 @@
 import os
-from typing import Dict, List
+from typing import Dict, List, Any
 
 from prefect import flow, task
 
 from db.models import Article
 
 
-def create_article(data: Dict) -> Article:
+def create_article(data: Dict[str, Any]) -> Article:
+    """
+    Create an Article entity from a dict.
+
+    Args:
+        data (Dict[str, Any]): A dictionary containing the article fields.
+    Returns:
+        Article: An Article entity.
+    """
     return Article(
         source=os.getenv("SOURCE"),
         handle=data["id"],
@@ -20,6 +28,14 @@ def create_article(data: Dict) -> Article:
 
 @task
 def delete_duplicates(data: List[Article]) -> List[Article]:
+    """
+    Removes duplicate entries of an Article entity.
+
+    Args:
+        data (List[Article]): A list of Article entities.
+    Returns:
+        List[Article]: A list of Article entities.
+    """
     return list(set(data))
 
 
