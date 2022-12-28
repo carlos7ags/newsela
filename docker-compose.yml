@@ -9,5 +9,7 @@ services:
       POSTGRES_USER: newsela
       POSTGRES_PASSWORD: newsela-password
       POSTGRES_DB: newsela_db
+    ports:
+      - "5432:5432"
     volumes:
       - ./volumes/postgres:/var/lib/postgresql/data
