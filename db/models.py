@@ -1,9 +1,10 @@
-from dataclasses import dataclass, field
+from dataclasses import field
+from pydantic.dataclasses import dataclass
+
 from datetime import datetime
 
-from sqlalchemy import Column, String, Integer, DateTime, Table
+from sqlalchemy import Column, DateTime, Integer, String, Table
 from sqlalchemy.orm import registry
-
 
 mapper_registry = registry()
 
@@ -15,7 +16,7 @@ class Article:
         "articles",
         mapper_registry.metadata,
         Column("id", Integer, primary_key=True),
-        Column("handle", String),
+        Column("handle", String, unique=True),
         Column("section", String),
         Column("authors", String),
         Column("headline", String),
@@ -25,12 +26,12 @@ class Article:
         Column("created_at", DateTime, default=datetime.utcnow),
     )
 
-    id: int = field(init=False)
     handle: str
     section: str
     authors: str
     headline: str
     body: str
     source_url: str
+    id: int = None
     wordcount: int = None
     created_at: datetime = None
