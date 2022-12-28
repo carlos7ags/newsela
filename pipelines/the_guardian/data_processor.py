@@ -1,4 +1,5 @@
 import os
+import re
 from typing import Any, Dict, List
 
 from prefect import flow, task
@@ -27,6 +28,20 @@ def create_article(data: Dict[str, Any]) -> Article:
 
 
 @task
+def remove_html_tags(article: Article) -> Article:
+    clean_html = re.compile('<.*?>')
+    article.body = re.sub(clean_html, "", article.body)
+    article.headline = re.sub(clean_html, "", article.headline)
+    return article
+
+
+@task
+def set_wordcount(article: Article) -> Article:
+    article.wordcount = len(article.body)
+    return article
+
+
+@task
 def delete_duplicates(data: List[Article]) -> List[Article]:
     """
     Removes duplicate entries of an Article entity.
@@ -48,6 +63,8 @@ def parse_data(data: List[Dict]) -> List[Article]:
 def process_data_flow(data: List[Dict]) -> List[Article]:
     data = parse_data(data)
     data = delete_duplicates(data)
+    data = [remove_html_tags(article) for article in data]
+    data = [set_wordcount(article) for article in data]
     return data
 
 
