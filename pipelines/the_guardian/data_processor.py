@@ -19,13 +19,20 @@ def create_article(data: Dict) -> Article:
 
 
 @task
+def delete_duplicates(data: List[Article]) -> List[Article]:
+    return list(set(data))
+
+
+@task
 def parse_data(data: List[Dict]) -> List[Article]:
     return [create_article(article) for article in data]
 
 
 @flow
 def process_data_flow(data: List[Dict]) -> List[Article]:
-    return parse_data(data)
+    data = parse_data(data)
+    data = delete_duplicates(data)
+    return data
 
 
 if __name__ == "__main__":

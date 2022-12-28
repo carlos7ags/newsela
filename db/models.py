@@ -41,3 +41,12 @@ class Article:
     id: int = None
     wordcount: int = None
     created_at: datetime = None
+
+    def __eq__(self, other):
+        if self.id is None or other.id is None:
+            return self.handle == other.handle
+        else:
+            return self.id == other.id
+
+    def __hash__(self):
+        return hash(self.handle)
