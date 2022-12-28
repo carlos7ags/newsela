@@ -1,9 +1,9 @@
 import datetime
 import os
-from typing import List, Dict
+from typing import Dict, List
 
 import requests
-from prefect import task, flow
+from prefect import flow, task
 
 
 @task

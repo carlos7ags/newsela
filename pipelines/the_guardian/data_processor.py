@@ -1,14 +1,13 @@
-import datetime
-from typing import List, Dict
+from typing import Dict, List
 
-from prefect import task, flow
+from prefect import flow, task
 
 from db.models import Article
 
 
 def create_article(data: Dict) -> Article:
     return Article(
-        handle=data["handle"],
+        handle=data["id"],
         section=data["sectionName"],
         authors=data["fields"]["byline"],
         headline=data["fields"]["headline"],
