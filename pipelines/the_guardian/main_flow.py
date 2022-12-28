@@ -7,7 +7,7 @@ from pipelines.the_guardian.data_loader import load_data_flow
 from pipelines.the_guardian.data_processor import process_data_flow
 
 
-@flow
+@flow(log_prints=True)
 def main_flow() -> None:
     raw_data = extract_data_flow()
     processed_data = process_data_flow(raw_data)
