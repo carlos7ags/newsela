@@ -1,6 +1,6 @@
 import argparse
 import importlib
-
+import os
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -15,5 +15,6 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     module = importlib.import_module(".main_flow", package=f"pipelines.{args.source}")
+    os.environ["SOURCE"] = args.source
 
     module.run()

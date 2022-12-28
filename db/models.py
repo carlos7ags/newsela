@@ -12,10 +12,15 @@ mapper_registry = registry()
 @mapper_registry.mapped
 @dataclass
 class Article:
+    """
+    An Article entity (dataclass).
+    """
+
     __table__ = Table(
         "articles",
         mapper_registry.metadata,
         Column("id", Integer, primary_key=True),
+        Column("source", String),
         Column("handle", String, unique=True),
         Column("section", String),
         Column("authors", String),
@@ -26,6 +31,7 @@ class Article:
         Column("created_at", DateTime, default=datetime.utcnow),
     )
 
+    source: str
     handle: str
     section: str
     authors: str

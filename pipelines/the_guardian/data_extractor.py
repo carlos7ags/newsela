@@ -3,7 +3,9 @@ import os
 from typing import Dict, List
 
 import requests
-from prefect import flow, task
+from prefect import flow, task, get_run_logger
+
+from pipelines.the_guardian.constants import SECTIONS_API_URL
 
 
 @task
@@ -14,10 +16,12 @@ def get_sections() -> List[str]:
     Returns:
         List[str]: a list of the api urls for active sections.
     """
-    api_url = "https://content.guardianapis.com/sections"
-    response = requests.get(api_url, params={"api-key": os.getenv("API_KEY")})
+    logger = get_run_logger()
+
+    response = requests.get(SECTIONS_API_URL, params={"api-key": os.getenv("API_KEY")})
     response.raise_for_status()
     results = response.json()["response"]["results"]
+    logger.info(f"Fetched {len(results)} active sections")
     return [section["apiUrl"] for section in results]
 
 
@@ -31,6 +35,8 @@ def get_content(section: str) -> List[Dict]:
     Returns:
         List[Dict]: a list of articles.
     """
+    logger = get_run_logger()
+
     params = {
         "api-key": os.getenv("API_KEY"),
         "from-date": datetime.datetime.today().strftime("%Y-%m-%d"),
@@ -41,6 +47,7 @@ def get_content(section: str) -> List[Dict]:
     response = requests.get(section, params=params)
     response.raise_for_status()
     results = response.json()["response"]["results"]
+    logger.info(f"{len(results)} articles retrieved from {section} section")
     return results
 
 

@@ -1,3 +1,4 @@
+import os
 from typing import Dict, List
 
 from prefect import flow, task
@@ -7,6 +8,7 @@ from db.models import Article
 
 def create_article(data: Dict) -> Article:
     return Article(
+        source=os.getenv("SOURCE"),
         handle=data["id"],
         section=data["sectionName"],
         authors=data["fields"]["byline"],
