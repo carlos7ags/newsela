@@ -23,8 +23,20 @@ As a result of the execution of the pipeline, the processed recrods are stored i
 docker-compose up -d
 ```
 
-### Sample database view
-![](../../../../var/folders/q0/hgw_k3g5591bbmby40cmbfjw0000gn/T/TemporaryItems/NSIRD_screencaptureui_EWoUK6/Screenshot 2022-12-28 at 12.38.17 AM.png)
+## Queries
+
+```sql
+SELECT section, COUNT(*) AS articles_count, AVG(word_count) AS word_count_avg
+FROM articles
+GROUP BY section
+```
+
+```sql
+SELECT date_trunc('MONTH', created_at) AS period, COUNT(*) AS articles_count
+FROM articles
+GROUP BY date_trunc('MONTH', created_at)
+```
+
 
 ## License
 
